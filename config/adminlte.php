@@ -376,6 +376,11 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Manage Kategori',
+            'url' => 'kategori',
+            'icon' => 'fas fa-list',
+        ],
         ['header' => 'labels'],
         [
             'text' => 'important',
