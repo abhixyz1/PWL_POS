@@ -1,17 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.template')
 
-@section('subtitle', 'welcome')
-@section('content_header_title', 'Home')
-@section('content_header_subtitle', 'Welcome')
+@section('content')
 
-@section('content_body')
-    <p>Welcome to this beautiful admin panel</p>
-@stop
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Halo, apa kabar!!!</h3>
+        <div class="card-tools"></div>
+    </div>
+    <div class="card-body">
+        Selamat datang semua, ini adalah halaman utama dari aplikasi ini.
+    </div>
+</div>
 
-@push('css')
-        {{-- ... --}}
-@endpush
-
-@push('js')
-    <script>console.log("Hi, I'm using the Laravel-AdminLTE package!")</script>
-@endpush
+@endsection
