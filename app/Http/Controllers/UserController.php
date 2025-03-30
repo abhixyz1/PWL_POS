@@ -58,13 +58,20 @@ class UserController extends Controller
     }
     public function tambah_simpan(Request $request)
     {
+        $request->validate([
+            'username' => 'required|string|max:50|unique:m_user,username',
+            'nama' => 'required|string|max:225',
+            'password' => 'nullable|min:6|confirmed',
+            'level_id' => 'required|exists:m_level,level_id',
+        ]);
+
         UserModel::create([
             'username' => $request->username,
             'nama' => $request->nama,
             'password' => Hash::make($request->password),
             'level_id' => $request->level_id,
         ]);
-        return redirect('/user');
+        return redirect('/user')->with('success', 'User berhasil ditambahkan!');
     }
     public function ubah($id)
     {

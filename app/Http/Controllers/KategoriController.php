@@ -19,11 +19,19 @@ class KategoriController extends Controller
 
     public function store(Request $request)
     {
-        KategoriModel::create([
-            'kategori_kode' => $request->kodeKategori,
-            'kategori_nama' => $request->namaKategori,
+        // Validasi dengan aturan bail
+        $validatedData = $request->validate([
+            'kategori_kode' => 'required|max:5|unique:m_kategori,kategori_kode',
+            'kategori_nama' => 'required|max:255',
         ]);
-        return redirect('/kategori');
+
+        // Simpan data ke database
+        KategoriModel::create([
+            'kategori_kode' => $validatedData['kategori_kode'],
+            'kategori_nama' => $validatedData['kategori_nama'],
+        ]);
+
+        return redirect('/kategori')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     public function edit($id)

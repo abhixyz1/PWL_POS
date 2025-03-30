@@ -377,6 +377,11 @@ return [
             ],
         ],
         [
+            'text' => 'Manage User',
+            'url' => 'user',
+            'icon' => 'fas fa-list',
+        ],
+        [
             'text' => 'Manage Kategori',
             'url' => 'kategori',
             'icon' => 'fas fa-list',
