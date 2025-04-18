@@ -46,9 +46,15 @@ Route::group(['prefix' => 'level'], function () {
     Route::post('/list', [LevelController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
     Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah level
     Route::post('/', [LevelController::class, 'store']); // menyimpan data level baru
+    Route::get('/create_ajax', [LevelController::class, 'create_ajax']); // menampilkan halaman form tambah level dengan ajax
+    Route::post('/ajax', [LevelController::class, 'store_ajax']); // menyimpan data level baru dengan ajax
     Route::get('/{id}', [LevelController::class, 'show']); // menampilkan detail level
     Route::get('/{id}/edit', [LevelController::class, 'edit']); // menampilkan halaman form edit level
     Route::put('/{id}', [LevelController::class, 'update']); // menyimpan perubahan data level
+    Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit level dengan ajax
+    Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data level dengan ajax
+    ROute::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // menampilkan konfirmasi hapus level dengan ajax
+    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // menghapus data level dengan ajax
     Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data level
 });
 
@@ -57,9 +63,15 @@ Route::group(['prefix' => 'kategori'], function(){
     Route::post('/list', [KategoriController::class, 'list']);
     Route::get('/create', [KategoriController::class, 'create']);
     Route::post('/', [KategoriController::class, 'store']);
+    Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
+    Route::post('/ajax', [KategoriController::class, 'store_ajax']);
     Route::get('/{id}', [KategoriController::class, 'show']);
     Route::get('/{id}/edit', [KategoriController::class, 'edit']);
     Route::put('/{id}', [KategoriController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']); 
+    Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']); 
+    ROute::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']); 
+    Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
     Route::delete('/{id}', [KategoriController::class, 'destroy']);
 });
 
@@ -68,9 +80,15 @@ Route::group(['prefix' => 'barang'], function(){
     Route::post('/list', [BarangController::class, 'list']);
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']);
+    Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
+    Route::post('/ajax', [BarangController::class, 'store_ajax']);
     Route::get('/{id}', [BarangController::class, 'show']);
     Route::get('/{id}/edit', [BarangController::class, 'edit']);
     Route::put('/{id}', [BarangController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);
+    ROute::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
     Route::delete('/{id}', [BarangController::class, 'destroy']);
 });
 
