@@ -58,6 +58,12 @@
                     <p>Transaksi Penjualan</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ url('logout') }}" class="nav-link text-white bg-danger {{ $activeMenu == 'logout' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Log Out</p>
+                </a>
+            </li>
         </ul>
     </nav>
 </div>
