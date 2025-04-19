@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function() { // artinya semua route di dalam 
         Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
     });
     
-    Route::group(['prefix' => 'level'], function () {
+    Route::middleware(['authorize:ADM'])->group(function () {
         Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal level
         Route::post('/list', [LevelController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
         Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah level
