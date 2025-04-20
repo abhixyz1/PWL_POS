@@ -61,6 +61,14 @@
                         <!-- /.col -->
                     </div>
                 </form>
+                <hr>
+                <div class="text-center mt-2">
+                    <p class="mb-1">Belum punya akun?</p>
+                    <a href="{{ route('register') }}" class="btn btn-outline-primary btn-block">
+                        <i class="fas fa-user-plus mr-1"></i> Buat Akun Baru
+                    </a>
+                </div>
+
             </div>
             <!-- /.card-body -->
         </div>
