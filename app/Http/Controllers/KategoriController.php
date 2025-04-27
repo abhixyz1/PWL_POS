@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KategoriModel;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -291,4 +292,73 @@ class KategoriController extends Controller
             'message' => 'Request tidak valid'
         ], 400);
     }
+
+    public function import()
+{
+    return view('kategori.import');
+}
+
+public function import_ajax(Request $request)
+{
+    if($request->ajax() || $request->wantsJson()){
+        $rules = [
+            'file_kategori' => ['required', 'mimes:xlsx', 'max:1024']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $file = $request->file('file_kategori');
+            $reader = IOFactory::createReader('Xlsx');
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+
+            $insert = [];
+            if(count($data) > 1){
+                foreach ($data as $baris => $row) {
+                    if($baris > 1){ // Skip header
+                        $insert[] = [
+                            'kategori_kode' => $row['A'],
+                            'kategori_nama' => $row['B'],
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    }
+                }
+
+                if(count($insert) > 0){
+                    // Gunakan insertOrIgnore untuk menghindari duplikat
+                    KategoriModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data kategori berhasil diimport',
+                    'count' => count($insert)
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'File tidak berisi data yang valid'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    return redirect('/');
+}
 }
