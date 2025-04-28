@@ -315,30 +315,30 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Validasi Gagal',
                     'msgField' => $validator->errors()
                 ]);
             }
 
-            $file = $request->file('file_user'); 
+            $file = $request->file('file_user');
 
-            $reader = IOFactory::createReader('Xlsx'); 
-            $reader->setReadDataOnly(true); 
-            $spreadsheet = $reader->load($file->getRealPath()); 
-            $sheet = $spreadsheet->getActiveSheet(); 
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
 
-            $data = $sheet->toArray(null, false, true, true); 
+            $data = $sheet->toArray(null, false, true, true);
 
             $insert = [];
-            if (count($data) > 1) { 
+            if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
-                    if ($baris > 1) { 
+                    if ($baris > 1) {
                         $insert[] = [
-                            'level_id'   => $value['A'],
-                            'username'   => $value['B'],
-                            'nama'       => $value['C'],
-                            'password'   => bcrypt($value['D']), 
+                            'level_id' => $value['A'],
+                            'username' => $value['B'],
+                            'nama' => $value['C'],
+                            'password' => bcrypt($value['D']),
                             'created_at' => now(),
                         ];
                     }
@@ -349,12 +349,12 @@ class UserController extends Controller
                 }
 
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'Data user berhasil diimport'
                 ]);
             } else {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Tidak ada data yang diimport'
                 ]);
             }
@@ -362,5 +362,56 @@ class UserController extends Controller
         return redirect('/');
     }
 
+    public function export_excel()
+    {
+        $user = UserModel::select('level_id', 'username', 'nama', 'password')
+            ->orderBy('level_id')
+            ->with('level')
+            ->get();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Username');
+        $sheet->setCellValue('C1', 'Nama');
+        $sheet->setCellValue('D1', 'Password');
+        $sheet->setCellValue('E1', 'Level Pengguna');
+
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
+
+        $no = 1;
+        $baris = 2;
+        foreach ($user as $key => $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->username);
+            $sheet->setCellValue('C' . $baris, $value->nama);
+            $sheet->setCellValue('D' . $baris, $value->password);
+            $sheet->setCellValue('E' . $baris, $value->level->level_nama);
+            $baris++;
+            $no++;
+        }
+
+        foreach (range('A', 'E') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $sheet->setTitle('Data User');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data User ' . date('Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
 }
 
