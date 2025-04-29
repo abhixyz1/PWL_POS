@@ -59,9 +59,11 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('logout') }}" class="nav-link text-white bg-danger {{ $activeMenu == 'logout' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-sign-out-alt"></i>
-                    <p>Log Out</p>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+                <a class="nav-link text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </li>
         </ul>

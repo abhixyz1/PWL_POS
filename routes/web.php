@@ -6,15 +6,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin']);
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');   
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'store_user'])->name('store_user');
+
 
 
 Route::middleware(['auth'])->group(function() { // artinya semua route di dalam group ini harus login dulu
@@ -24,7 +26,13 @@ Route::middleware(['auth'])->group(function() { // artinya semua route di dalam 
     });
     
     Route::get('/', [WelcomeController::class, 'index']);
-    
+
+    Route::middleware(['auth'])->prefix('profile')->group(function() {
+        Route::get('/', [ProfileController::class, 'show'])->name('profile.show');
+        Route::post('/update', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/update-photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
+        Route::get('/remove-photo', [ProfileController::class, 'removePhoto'])->name('profile.remove-photo');
+    });
 
     Route::middleware(['authorize:ADM,MNG'])->prefix('level')->group(function () {
         Route::get('/', [LevelController::class, 'index']);
